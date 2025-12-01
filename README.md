@@ -38,6 +38,46 @@ Kroptastic is a decentralized platform for optimizing crop harvest times, starti
 
 
 ## Smart Contract Highlights
+[//]: # (---)
+
+## MVP Architecture Mapping & Development Plan
+
+### Architecture Mapping
+
+**Backend**
+- Metric Collection: `backend/db.js`, `backend/routes/crops.js`
+- AI Model: `ml/` (model logic), `backend/utils/prediction.js` (integration)
+- Notification System: `backend/routes/` (add notification route), `backend/models/` (notification model)
+- Blockchain Integration: `smart-contracts/`, `backend/smart-contracts/deploy.js`
+
+**Frontend**
+- Metric Input: `frontend/src/components/CropForm.js`
+- Dashboard Display: `frontend/src/components/CropDashboard.js`
+- API Services: `frontend/src/services/api.js`
+
+**Smart Contracts**
+- Blockchain Storage: `smart-contracts/KroptasticLogs.sol`, `smart-contracts/deploy.js`
+
+**Other Relevant Folders**
+- `iot/`: For sensor integration (future expansion)
+- `lib/`: Shared libraries/utilities
+- `src/`, `test/`: Solidity contracts and tests
+
+### MVP Development Plan
+1. **Design MVP architecture**
+	- Outline core components and file mapping
+2. **Implement plant metric collection**
+	- Backend and frontend logic for farmers to input/upload metrics
+3. **Integrate AI harvest prediction model**
+	- Develop or stub model, connect to backend
+4. **Build notification system**
+	- Backend logic to send/store notifications, frontend dashboard integration
+5. **Integrate blockchain storage**
+	- Store notifications/metrics on blockchain for privacy and traceability
+6. **Connect frontend dashboard**
+	- Display metrics, predictions, notifications in dashboard with real-time updates
+
+Refer to this section for development, collaboration, and grant application alignment.
 - Gas optimization: packed struct, smaller uint types, calldata usage
 - Security: access control, input validation
 - Role management: owner and authorized farmers

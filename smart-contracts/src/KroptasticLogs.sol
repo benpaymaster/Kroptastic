@@ -28,6 +28,19 @@ interface IKroptasticLogs {
 /// @notice Stores crop data and harvest notifications for decentralized farming
 /// @dev UUPS upgradeable, gas-optimized, secure, and modular
 contract KroptasticLogs is Ownable, UUPSUpgradeable, IKroptasticLogs {
+    /// @notice Address of the soil moisture oracle
+    address public soilMoistureOracle;
+
+    /// @notice Set the soil moisture oracle address
+    /// @param _oracle Address of the oracle contract
+    function setSoilMoistureOracle(address _oracle) external onlyOwner {
+        soilMoistureOracle = _oracle;
+    }
+
+    /// @notice Interface for the mock oracle
+    interface ISoilMoistureOracle {
+        function getSoilMoisture() external view returns (uint64);
+    }
     /// @notice Crop data entry
     /// @dev Packed for gas optimization
     struct CropEntry {
@@ -209,6 +222,41 @@ contract KroptasticLogs is Ownable, UUPSUpgradeable, IKroptasticLogs {
         string calldata notes,
         uint32 harvestReadiness
     ) external onlyFarmer whenNotPaused {
+        require(soilMoisture <= 100, "Soil moisture must be 0-100");
+        require(harvestReadiness <= 100, "Harvest readiness must be 0-100");
+        crops.push(
+            CropEntry({
+                cropName: cropName,
+                coloration: coloration,
+                notes: notes,
+                soilMoisture: soilMoisture,
+                nitrogenContent: nitrogenContent,
+                carbonContent: carbonContent,
+                harvestReadiness: harvestReadiness,
+                timestamp: uint32(block.timestamp),
+                farmer: msg.sender
+            })
+        );
+        emit CropLogged(crops.length - 1, msg.sender, harvestReadiness);
+    }
+
+    /// @notice Log a new crop entry using the oracle for soil moisture
+    /// @param cropName Name of the crop
+    /// @param coloration Coloration/appearance
+    /// @param nitrogenContent Nitrogen content (mg/kg)
+    /// @param carbonContent Carbon content (mg/kg)
+    /// @param notes Additional notes
+    /// @param harvestReadiness Harvest readiness percentage
+    function logCropWithOracle(
+        string calldata cropName,
+        string calldata coloration,
+        uint64 nitrogenContent,
+        uint64 carbonContent,
+        string calldata notes,
+        uint32 harvestReadiness
+    ) external onlyFarmer whenNotPaused {
+        require(soilMoistureOracle != address(0), "Oracle not set");
+        uint64 soilMoisture = ISoilMoistureOracle(soilMoistureOracle).getSoilMoisture();
         require(soilMoisture <= 100, "Soil moisture must be 0-100");
         require(harvestReadiness <= 100, "Harvest readiness must be 0-100");
         crops.push(

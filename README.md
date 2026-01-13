@@ -10,7 +10,14 @@
 
 
 ## Overview
-Kroptastic is a decentralized platform for optimizing crop harvest times, starting with barley for malting. Farmers record key parameters (coloration, soil moisture, nitrogen, carbon, etc.), which are analyzed by an AI model to predict harvest readiness. Crop data is stored on the blockchain for transparency, allowing supply chain participants (maltsters, pubs, importers, exporters, farmers) to access and receive notifications.
+Kroptastic is a decentralized platform for optimizing crop harvest times, starting with barley for malting. The MVP enables:
+
+1. **Farmers submit crop metrics** before and during crop growth (e.g., soil moisture, nitrogen content, coloration, etc.) via a user-friendly form.
+2. **AI model calculates harvest readiness** using these metrics, providing a percentage indicator of how close the crop is to optimal harvest (e.g., "Soil moisture is 60%, Nitrogen content is 40% — 40% to optimal harvest").
+3. **Notifications are sent to farmers** about harvest readiness. These notifications are also available to supply chain partners (malsters, etc.), who can send prompts to farmers (e.g., "Deliver produce by X date").
+4. **Malsters receive notifications and can prompt farmers**, ensuring produce meets malster requirements and reducing losses for farmers.
+
+All crop data and notifications are stored on the blockchain for privacy, traceability, and transparency, allowing supply chain participants (malsters, pubs, importers, exporters, farmers) to access and act on real-time information.
 
 
 ## Features
@@ -44,12 +51,10 @@ Kroptastic is a decentralized platform for optimizing crop harvest times, starti
 
 ### Architecture Mapping
 
-**Backend**
-- Metric Collection: `backend/db.js`, `backend/routes/crops.js`
-- AI Model: `ml/` (model logic), `backend/utils/prediction.js` (integration)
-- Notification System: `backend/routes/` (add notification route), `backend/models/` (notification model)
-- Blockchain Integration: `smart-contracts/`, `backend/smart-contracts/deploy.js`
-
+## New MVP Features (2026)
+- 🛰️ Mock Oracle: Simulated on-chain oracle for soil moisture data (see smart-contracts/src/MockSoilMoistureOracle.sol)
+- 🏷️ Batch NFT: Each harvest cycle is minted as an NFT with GPS, Protein %, and Nitrogen metadata (see smart-contracts/src/BatchNFT.sol)
+- ⏳ Forecast Backend: Node.js endpoint provides "Days to Harvest" countdown for frontend (see backend/forecast.js)
 **Frontend**
 - Metric Input: `frontend/src/components/CropForm.js`
 - Dashboard Display: `frontend/src/components/CropDashboard.js`
@@ -59,23 +64,16 @@ Kroptastic is a decentralized platform for optimizing crop harvest times, starti
 - Blockchain Storage: `smart-contracts/KroptasticLogs.sol`, `smart-contracts/deploy.js`
 
 **Other Relevant Folders**
-- `iot/`: For sensor integration (future expansion)
-- `lib/`: Shared libraries/utilities
-- `src/`, `test/`: Solidity contracts and tests
 
+**New MVP Features**
+- Mock Oracle: `smart-contracts/src/MockSoilMoistureOracle.sol`
+- Batch NFT: `smart-contracts/src/BatchNFT.sol`
 ### MVP Development Plan
 1. **Design MVP architecture**
-	- Outline core components and file mapping
-2. **Implement plant metric collection**
-	- Backend and frontend logic for farmers to input/upload metrics
 3. **Integrate AI harvest prediction model**
 	- Develop or stub model, connect to backend
-4. **Build notification system**
 	- Backend logic to send/store notifications, frontend dashboard integration
 5. **Integrate blockchain storage**
-	- Store notifications/metrics on blockchain for privacy and traceability
-6. **Connect frontend dashboard**
-	- Display metrics, predictions, notifications in dashboard with real-time updates
 
 Refer to this section for development, collaboration, and grant application alignment.
 - Gas optimization: packed struct, smaller uint types, calldata usage
@@ -90,6 +88,10 @@ Refer to this section for development, collaboration, and grant application alig
 {
 	cropName: "Barley",
 	coloration: "Golden",
+7. **Add mock oracle and Batch NFT**
+	- Simulate soil moisture data on-chain and mint tradable harvest NFTs
+8. **Add forecast backend**
+	- Provide "Days to Harvest" countdown via API for frontend
 	soilMoisture: 18,
 	nitrogenContent: 1400,
 	carbonContent: 480,
